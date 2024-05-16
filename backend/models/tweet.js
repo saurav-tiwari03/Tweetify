@@ -4,7 +4,6 @@ const tweetSchema = new mongoose.Schema({
   tweet:{
     type:String,
     required:true,
-    length:50
   },
   tweetBy:{
     type:String,
