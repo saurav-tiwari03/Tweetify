@@ -1,13 +1,17 @@
-import { AddTweet } from "./components/AddTweet";
-import { Navbar } from "./components/Navbar";
+import {Routes,Route} from 'react-router-dom'
+import { Home } from './pages/Home'
+import { Login } from './pages/Login'
+import { SignUp } from './pages/SignUp'
+
 
 export default function App() {
   return (
-    <div className="text-white">
-      <Navbar />
-      <div className="flex items-center justify-end">
-        <AddTweet />
-      </div>
+    <div className="">
+      <Routes >
+        <Route path='/' element={<Home />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='signup' element={<SignUp />} />
+      </Routes>
     </div>
   )
 }

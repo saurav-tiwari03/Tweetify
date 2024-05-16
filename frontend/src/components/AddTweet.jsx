@@ -4,19 +4,44 @@ import { useState } from "react";
 
 export const AddTweet = () => {
   const [tweet,setTweet] = useState(null)
+  const tweetBy = 'Saurav Tiwari'
+
+  const postHandler = () => {
+    toast.success('Tweeted Successfully', {
+      style: {  
+        border: '1px solid #707070',
+        paddingRight:'40px',
+        paddingLeft:'40px',
+        paddingTop:'20px',
+        paddingBottom:'20px',
+        color: '#fff',
+        background:'#222'
+      },
+      iconTheme:{
+        primary: '#707070',
+        secondary: '#fff',
+      }
+    });
+    
+    const existingTweets = JSON.parse(localStorage.getItem("Tweet-info")) || [];
+    const newTweet = { tweet, tweetBy };
+    const updatedTweets = [...existingTweets, newTweet];
+    localStorage.setItem('Tweet-info', JSON.stringify(updatedTweets));
+  }
+
   return (
-    <div className="flex px-4 py-2">
-      <div className="border-2 border-[#707070] px-8 py-4 rounded-lg">
+    <div className="flex px-4 py-2 ">
+      <div className="border-2 border-[#707070] px-8 py-4 rounded-lg bg-[#242424]">
         <h1 className=" text-blue-400 font-semibold text-2xl" id='form-heading'>Tweet whats in your mind</h1>
-        <div>
+        <form>
           <input 
             className="bg-transparent border-b-[1px] outline-none w-[200px] focus:w-[250px] transition-all duration-300 ease-in-out pl-2 my-2" type="text" 
             placeholder="What is happening!" onChange={(e) => setTweet(e.target.value)}/>
-        </div>
+        </form>
         <div className="flex items-start justify-end mt-4">
           <button className="border-[#707070] border-[2px] px-4 py-1 text-[white]
               hover:bg-[#707070] hover:text-white duration-500 rounded-lg flex items-center gap-1"
-              onClick={() => toast.success(`${tweet}`)}>
+              onClick={postHandler }>
             <RiLeafLine/> Post
           </button>
         </div>
