@@ -14,7 +14,7 @@ export const Home = () => {
   const [length, setLength] = useState();
 
   useEffect(() => {
-    axios.get('http://localhost:4000/api/v1/getTweets')
+    axios.get(`${import.meta.env.VITE_API_URL}/getTweets`)
       .then((response) => {
         console.log(response.data.data[0])
         setLength(response.data.data.length)

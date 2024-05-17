@@ -14,7 +14,7 @@ export const AddTweet = () => {
         toast.error('Please Enter Something')
       }
       else  {
-        axios.post('http://localhost:4000/api/v1/createTweet',{tweet,tweetBy})
+        axios.post(`${import.meta.env.VITE_API_URL}/createTweet`,{tweet,tweetBy})
         .then((response ) => {
           console.log(response.data)
           toast.success('Tweeted Successfully', {

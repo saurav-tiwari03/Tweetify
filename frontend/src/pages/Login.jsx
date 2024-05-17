@@ -15,7 +15,7 @@ export const Login = () => {
   const navigate = useNavigate()
 
   const loginHandler = () => {
-    axios.post('http://localhost:4000/api/v1/login',{email,password})
+    axios.post(`${import.meta.env.VITE_API_URL}/login`,{email,password})
     .then((response) => {
       console.log(response.data.data);
       localStorage.setItem('token', response.data.data.token)
