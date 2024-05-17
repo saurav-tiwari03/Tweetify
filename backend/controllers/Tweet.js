@@ -37,3 +37,26 @@ exports.getTweets = async (req,res) => {
     })
   }
 } 
+
+exports.deleteTweet = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await Tweet.findByIdAndDelete(id);
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: 'Tweet not found'
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: 'Tweet deleted successfully'
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};

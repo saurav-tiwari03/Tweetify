@@ -1,32 +1,77 @@
 import { RiLeafLine } from "react-icons/ri";
 import {Toaster,toast} from 'react-hot-toast'
 import { useState } from "react";
+import axios from 'axios'
 
 export const AddTweet = () => {
   const [tweet,setTweet] = useState(null)
   const tweetBy = 'Saurav Tiwari'
 
   const postHandler = () => {
-    toast.success('Tweeted Successfully', {
-      style: {  
-        border: '1px solid #707070',
-        paddingRight:'40px',
-        paddingLeft:'40px',
-        paddingTop:'20px',
-        paddingBottom:'20px',
-        color: '#fff',
-        background:'#222'
-      },
-      iconTheme:{
-        primary: '#707070',
-        secondary: '#fff',
+
+    try {
+      if(tweet.length == 0){
+        toast.error('Please Enter Something')
       }
-    });
-    
-    const existingTweets = JSON.parse(localStorage.getItem("Tweet-info")) || [];
-    const newTweet = { tweet, tweetBy };
-    const updatedTweets = [...existingTweets, newTweet];
-    localStorage.setItem('Tweet-info', JSON.stringify(updatedTweets));
+      else  {
+        axios.post('http://localhost:4000/api/v1/createTweet',{tweet,tweetBy})
+        .then((response ) => {
+          console.log(response.data)
+          toast.success('Tweeted Successfully', {
+            style: {  
+              border: '1px solid #707070',
+              paddingRight:'40px',
+              paddingLeft:'40px',
+              paddingTop:'20px',
+              paddingBottom:'20px',
+              color: '#fff',
+              background:'#222'
+            },
+            iconTheme:{
+              primary: '#707070',
+              secondary: '#fff',
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error.message)
+          toast.error(`${error.message}`, {
+            style: {  
+              border: '1px solid #707070',
+              paddingRight:'40px',
+              paddingLeft:'40px',
+              paddingTop:'20px',
+              paddingBottom:'20px',
+              color: '#fff',
+              background:'#222'
+            },
+            iconTheme:{
+              primary: '#707070',
+              secondary: '#fff',
+            }
+          });
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      console.log(error.message)
+      toast.error('Unable to Tweet', {
+        style: {  
+          border: '1px solid #707070',
+          paddingRight:'40px',
+          paddingLeft:'40px',
+          paddingTop:'20px',
+          paddingBottom:'20px',
+          color: '#fff',
+          background:'#222'
+        },
+        iconTheme:{
+          primary: '#707070',
+          secondary: '#fff',
+        }
+      });
+    }
+
   }
 
   return (
