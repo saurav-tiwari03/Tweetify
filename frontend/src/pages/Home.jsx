@@ -11,14 +11,13 @@ import axios from 'axios';
 export const Home = () => {
   const [tweetData, setTweetData] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [length, setLength] = useState();
+  const [length, setLength] = useState('');
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_URL}/getTweets`)
+    axios.get(`http://localhost:4000/api/v1/getTweets`)
       .then((response) => {
-        console.log(response.data.data[0])
-        setLength(response.data.data.length)
-        setTweetData(response.data.data)
+        // console.log(response.data.Tweets)
+        setTweetData(response.data.Tweets)
       })
       .catch((error) => {
         console.log(error)
@@ -29,7 +28,7 @@ export const Home = () => {
     axios.delete(`http://localhost:4000/api/v1/delete/${id}`)
       .then((response) => {
         console.log(response)
-        setTweetData(tweetData.filter(tweet => tweet._id !== id)); // Remove the deleted tweet from state
+        setTweetData(tweetData.filter(tweet => tweet._id !== id));
         toast.success('Tweet deleted successfully');
       })
       .catch((error) => {
@@ -43,12 +42,14 @@ export const Home = () => {
       <Navbar />
       <div className='flex items-start justify-between'>
         <div className=''>
-          {tweetData.map((tweet) => (
-            <div key={tweet._id} className='flex relative'>
+          {tweetData.map((tweet) => { 
+            return (
+              <div key={tweet._id} className='flex relative'>
               <Tweet tweet={tweet.tweet} tweetBy={tweet.tweetBy} />
               <button onClick={() => deleteHandler(tweet._id)} className='text-3xl absolute top-10 right-8'><MdDelete /></button>
-            </div>
-          ))}
+            </div>  
+            )
+          })}
         </div>
         <div className="md:flex items-center justify-end hidden">
           {!showModal && <AddTweet />}

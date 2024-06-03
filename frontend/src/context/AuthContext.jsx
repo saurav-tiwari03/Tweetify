@@ -7,6 +7,7 @@ export const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [name, setName] = useState(null);
   const [email, setEmail] = useState(null);
+  const [id,setId] = useState(null);
   const [authStatus,setAuthStatus] = useState(null);
 
   const getDecodedToken = (token) => {
@@ -23,9 +24,9 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       try {
         const decodedUser = getDecodedToken(token);
-        // console.log(decodedUser.payLoad.name);
         setName(decodedUser.payLoad.name)
         setEmail(decodedUser.payLoad.email)
+        setId(decodedUser.payLoad.id)
         setAuthStatus(true);
       } catch (error) {
         console.log(error);
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{name,email,authStatus}}>
+    <AuthContext.Provider value={{name,email,id,authStatus}}>
       {children}
     </AuthContext.Provider>
   );

@@ -8,7 +8,6 @@ import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-
 export const SignUp = () => {
 
   const [name,setName] = useState()
@@ -17,14 +16,14 @@ export const SignUp = () => {
   const navigate = useNavigate()
 
   const signupHandler = () => {
-    axios.post(`${import.meta.env.VITE_API_URL}/signup'`,{name,email,password})
+    axios.post(`http://localhost:4000/api/v1/signup`,{name,email,password})
     .then((response) => {
       console.log(response.data.data.token);
       localStorage.setItem('token',response.data.data.token)
       navigate('/')
     })
     .catch((error) => {
-      console.log(error)
+      console.log(error.message)
     })
   }
 

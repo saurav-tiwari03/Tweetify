@@ -1,18 +1,19 @@
-const User = require('./../models/user');
-const bcrypt = require('bcrypt');
-const validator = require('validator');
-const jwt = require('jsonwebtoken');
+const User = require("./../models/user");
+const Tweet = require("./../models/tweet");
+const bcrypt = require("bcrypt");
+const validator = require("validator");
+const jwt = require("jsonwebtoken");
 
+//Singup Controller
 exports.signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-
     // Validate input
     if (!validator.isEmail(email)) {
-      throw new Error('Invalid email format');
+      throw new Error("Invalid email format");
     }
     if (!validator.isLength(password, { min: 6 })) {
-      throw new Error('Password must be at least 6 characters long');
+      throw new Error("Password must be at least 6 characters long");
     }
 
     // Check if user exists
@@ -25,63 +26,78 @@ exports.signup = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
 
     // Create user
-    const user = await User.create({ name, email, password: hashPassword });
+    const user = await User.create({
+      name,
+      email,
+      password: hashPassword,
+      tweets: [],
+    });
+    console.log(`Hey ${name}! Welcome to Tweetify`)
 
     const payLoad = {
-      name:user.name,
-      email:user.email,
-      id:user._id,
-    }
+      name: user.name,
+      email: user.email,
+      id: user._id,
+    };
 
-    const token = jwt.sign({payLoad},process.env.SECRET_KEY,{expiresIn:'3d'});
+    const token = jwt.sign({ payLoad }, process.env.SECRET_KEY, {
+      expiresIn: "3d",
+    });
 
     res.status(200).json({
       success: true,
-      data: { name, email ,token},
-      message: `User ${name} created successfully`
+      data: { name, email, token },
+      message: `User ${name} created successfully`,
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
 
+//Login Controller
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      throw new Error('Please enter a valid email and password');
+      throw new Error("Please enter a valid email and password");
     }
 
     const user = await User.findOne({ email });
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     const payLoad = {
-      name:user.name,
-      email:user.email,
-      id:user._id,
-    }
+      name: user.name,
+      email: user.email,
+      id: user._id,
+    };
 
     const userFound = await bcrypt.compare(password, user.password);
     if (!userFound) {
-      throw new Error('Invalid credentials');
+      throw new Error("Invalid credentials");
     }
-    let token = jwt.sign({payLoad},process.env.SECRET_KEY,{expiresIn: '3d'});
-
+    let token = jwt.sign({ payLoad }, process.env.SECRET_KEY, {
+      expiresIn: "3d",
+    });
+    res.cookie('token',token,{
+      httpOnly: true,
+      maxAge:3 * 24 * 60 * 60 * 1000,
+    })
     res.status(200).json({
       success: true,
-      data: {email ,token},
-      message: `Hello ${user.name}`
+      data: { email, token },
+      message: `Hello ${user.name}`,
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
+
